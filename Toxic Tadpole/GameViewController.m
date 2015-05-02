@@ -1,13 +1,14 @@
 //
 //  GameViewController.m
-//  Toxic Tadpole
+//  Boing!
 //
-//  Created by Jacob Selmes on 02/05/2015.
+//  Created by Jacob Selmes on 19/03/2015.
 //  Copyright (c) 2015 Jacob Selmes. All rights reserved.
 //
 
 #import "GameViewController.h"
 #import "GameScene.h"
+#import "GameEnd.h"
 
 @implementation SKScene (Unarchive)
 
@@ -38,11 +39,13 @@
     SKView * skView = (SKView *)self.view;
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
+    //skView.showsPhysics = YES;
+    
     /* Sprite Kit applies additional optimizations to improve rendering performance */
     skView.ignoresSiblingOrder = YES;
     
     // Create and configure the scene.
-    GameScene *scene = [GameScene unarchiveFromFile:@"GameScene"];
+    SKScene * scene = [GameEnd sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.

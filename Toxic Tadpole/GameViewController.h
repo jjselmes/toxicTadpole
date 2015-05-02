@@ -1,6 +1,6 @@
 //
 //  GameViewController.h
-//  Toxic Tadpole
+//  Boing!
 //
 
 //  Copyright (c) 2015 Jacob Selmes. All rights reserved.

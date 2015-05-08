@@ -24,7 +24,8 @@ static const uint32_t reverseCategory = 0x1<<5;
 
 @property (nonatomic, strong) SKSpriteNode *floor;
 @property (nonatomic, strong) SKSpriteNode *floor2;
-@property SKSpriteNode *roof;
+@property (nonatomic, strong) SKSpriteNode *roof;
+@property (nonatomic, strong) SKSpriteNode *roof2;
 @property NSDate *start;
 @property NSDate *now;
 @property float flowSpeed;
@@ -51,6 +52,9 @@ static const uint32_t reverseCategory = 0x1<<5;
 
 @property (nonatomic, strong) SKSpriteNode *midground;
 @property (nonatomic, strong) SKSpriteNode *midground2;
+
+@property (nonatomic, strong) SKSpriteNode *foreground;
+@property (nonatomic, strong) SKSpriteNode *foreground2;
 
 @property (nonatomic, strong) NSMutableArray *liveContent;
 

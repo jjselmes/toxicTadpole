@@ -20,6 +20,7 @@
 @synthesize floor;
 @synthesize floor2;
 @synthesize roof;
+@synthesize roof2;
 @synthesize middleHit;
 @synthesize previousContent;
 @synthesize floorHit;
@@ -40,6 +41,8 @@
 @synthesize background2;
 @synthesize midground;
 @synthesize midground2;
+@synthesize foreground;
+@synthesize foreground2;
 
 +(id)sceneWithSize:(CGSize)size
 {
@@ -81,13 +84,12 @@
         SKTexture *bgTexture = [SKTexture textureWithImageNamed:@"backGround1"];
         background = [SKSpriteNode spriteNodeWithTexture:bgTexture];
         background.position = location;
-        background.zPosition = -2;
+        background.zPosition = -3;
         [self addChild:background];
-        
         SKTexture *bgTexture2 = [SKTexture textureWithImageNamed:@"backGround2"];
         background2 = [SKSpriteNode spriteNodeWithTexture:bgTexture2];
         background2.position = location2;
-        background2.zPosition = -2;
+        background2.zPosition = -3;
         [self addChild:background2];
         
         CGPoint location3 = CGPointMake(size.width*0.5f, size.height*0.5f);
@@ -95,27 +97,58 @@
         SKTexture *bgTexture1 = [SKTexture textureWithImageNamed:@"midGround1"];
         midground = [SKSpriteNode spriteNodeWithTexture:bgTexture1];
         midground.position = location3;
-        midground.zPosition = -1;
+        midground.zPosition = -2;
         [self addChild:midground];
         SKTexture *bgTexture3 = [SKTexture textureWithImageNamed:@"midGround2"];
         midground2 = [SKSpriteNode spriteNodeWithTexture:bgTexture3];
         midground2.position = location4;
-        midground2.zPosition = -1;
+        midground2.zPosition = -2;
         [self addChild:midground2];
+        
+        {
+            
+            CGPoint fglocation1 = CGPointMake(size.width*0.5f, size.height*0.5f);
+            CGPoint fglocation2 = CGPointMake(size.width*1.5f, size.height*0.5f);
+            SKTexture *fgTexture1 = [SKTexture textureWithImageNamed:@"foreGround1"];
+            foreground = [SKSpriteNode spriteNodeWithTexture:fgTexture1];
+            foreground.position = fglocation1;
+            foreground.zPosition = 7;
+            [self addChild:foreground];
+            SKTexture *fgTexture2 = [SKTexture textureWithImageNamed:@"foreGround2"];
+            foreground2 = [SKSpriteNode spriteNodeWithTexture:fgTexture2];
+            foreground2.position = fglocation2;
+            foreground2.zPosition = 7;
+            [self addChild:foreground2];
+            
+        }
         [self setUpScene];
     }
     return self;
 }
 
 -(void)setUpScene {
-    floor = [SKSpriteNode spriteNodeWithImageNamed:@"floor.png"];
-    floor2 = [SKSpriteNode spriteNodeWithImageNamed:@"floor.png"];
+    floor = [SKSpriteNode spriteNodeWithImageNamed:@"floor1.png"];
+    floor.name=@"floor";
+    floor.position = CGPointMake(winSize.width*0.5f, winSize.height*0.2f);
+    floor.zPosition = 5;
+    floor.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:floor.frame.size];
+    floor.physicsBody.dynamic=NO;
+    floor.physicsBody.affectedByGravity=NO;
+    floor.physicsBody.mass=4;
+    floor.physicsBody.restitution = 0.0f;
+    floor.physicsBody.linearDamping=0.0f;
+    floor.physicsBody.categoryBitMask = floorCategory;
+    floor.physicsBody.collisionBitMask = playerCategory | sceneCategory;
+    floor.physicsBody.contactTestBitMask = playerCategory | floorCategory | sceneCategory;
+    [self addChild:floor];
+    
+    floor2 = [SKSpriteNode spriteNodeWithImageNamed:@"floor2.png"];
     player = [SKSpriteNode spriteNodeWithImageNamed:@"player.png"];
     originalPlayerSize = player.frame.size;
     player.name = @"player";
     player.zPosition = 5;
     //player.anchorPoint = CGPointMake(0.5f, 0);
-    player.position = CGPointMake(winSize.width*0.333f, floor.frame.size.height + player.frame.size.height*0.5f);
+    player.position = CGPointMake(winSize.width*0.333f, floor.position.y + floor.frame.size.height*0.5f + player.frame.size.height*0.5f);
     originalY = player.position.y;
     SKTexture *playerTexture = [SKTexture textureWithImageNamed:@"player"];
     player.physicsBody = [SKPhysicsBody bodyWithTexture:playerTexture alphaThreshold:0.0 size:playerTexture.size];
@@ -139,22 +172,10 @@
     [self addChild:player];
     // Background layers and first lot of surfaces.
     
-    floor.name=@"floor";
-    floor.position = CGPointMake(winSize.width*0.5f, floor.size.height*0.5f);
-    floor.zPosition = 5;
-    floor.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:floor.frame.size];
-    floor.physicsBody.dynamic=NO;
-    floor.physicsBody.affectedByGravity=NO;
-    floor.physicsBody.mass=4;
-    floor.physicsBody.restitution = 0.0f;
-    floor.physicsBody.linearDamping=0.0f;
-    floor.physicsBody.categoryBitMask = floorCategory;
-    floor.physicsBody.collisionBitMask = playerCategory | sceneCategory;
-    floor.physicsBody.contactTestBitMask = playerCategory | floorCategory | sceneCategory;
-    [self addChild:floor];
+    
     
     floor2.name=@"floor";
-    floor2.position = CGPointMake(winSize.width*1.5f, floor2.size.height*0.5f);
+    floor2.position = CGPointMake(winSize.width*1.5f, winSize.height*0.2f);
     floor2.zPosition = 5;
     floor2.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:floor2.frame.size];
     floor2.physicsBody.dynamic=NO;
@@ -167,9 +188,10 @@
     floor2.physicsBody.contactTestBitMask = playerCategory | floorCategory | sceneCategory;
     [self addChild:floor2];
     
-    roof = [SKSpriteNode spriteNodeWithImageNamed:@"roof.png"];
+    roof = [SKSpriteNode spriteNodeWithImageNamed:@"floor1.png"];
     roof.name=@"roof";
-    roof.position = CGPointMake(winSize.width*0.5f, winSize.height - roof.size.height*0.5f);
+    roof.zPosition = 5;
+    roof.position = CGPointMake(winSize.width*0.5f, winSize.height*0.85f);
     roof.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:roof.frame.size];
     roof.physicsBody.dynamic=NO;
     roof.physicsBody.affectedByGravity=NO;
@@ -180,39 +202,24 @@
     roof.physicsBody.collisionBitMask = floorCategory | playerCategory | sceneCategory;
     roof.physicsBody.contactTestBitMask = floorCategory | playerCategory | sceneCategory;
     [self addChild:roof];
+    
+    roof2 = [SKSpriteNode spriteNodeWithImageNamed:@"floor2.png"];
+    roof2.name=@"roof";
+    roof2.zPosition = 5;
+    roof2.position = CGPointMake(winSize.width*1.5f, winSize.height*0.85f);
+    roof2.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:roof2.frame.size];
+    roof2.physicsBody.dynamic=NO;
+    roof2.physicsBody.affectedByGravity=NO;
+    roof2.physicsBody.mass=4;
+    roof2.physicsBody.restitution = 0.0f;
+    roof2.physicsBody.linearDamping=0.0f;
+    roof2.physicsBody.categoryBitMask = floorCategory;
+    roof2.physicsBody.collisionBitMask = floorCategory | playerCategory | sceneCategory;
+    roof2.physicsBody.contactTestBitMask = floorCategory | playerCategory | sceneCategory;
+    [self addChild:roof2];
 
        
-    SKSpriteNode *block1 = [SKSpriteNode spriteNodeWithImageNamed:@"block1.png"];
-    
-    block1.name = @"block";
-    block1.position = CGPointMake(winSize.width*1.6f, floor.frame.size.height + block1.frame.size.height*0.5f);
-    block1.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block1.frame.size];
-    block1.physicsBody.dynamic=YES;
-    block1.physicsBody.affectedByGravity=NO;
-    block1.physicsBody.mass=4;
-    block1.physicsBody.restitution = 0.5f;
-    block1.physicsBody.linearDamping=0.0f;
-    block1.physicsBody.categoryBitMask = blockCategory;
-    block1.physicsBody.collisionBitMask = playerCategory | floorCategory;
-    block1.physicsBody.contactTestBitMask = floorCategory | playerCategory;
-    [self addChild:block1];
-    
-    
-//    SKSpriteNode *block = [SKSpriteNode spriteNodeWithImageNamed:@"block3.png"];
-//    
-//    block.name = @"block";
-//    block.position = CGPointMake(winSize.width*2.4f, floor.frame.size.height + block.frame.size.height*0.5f);
-//    block.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size];
-//    block.physicsBody.dynamic=YES;
-//    block.physicsBody.affectedByGravity=NO;
-//    block.physicsBody.mass=4;
-//    block.physicsBody.restitution = 0.5f;
-//    block.physicsBody.linearDamping=0.0f;
-//    block.physicsBody.categoryBitMask = blockCategory;
-//    block.physicsBody.collisionBitMask = playerCategory | floorCategory;
-//    block.physicsBody.contactTestBitMask = floorCategory | playerCategory;
-//    [self addChild:block];
-
+    [self contentTwo];
 }
 
 -(void)didMoveToView:(SKView *)view {
@@ -230,22 +237,24 @@
 
 
 -(void)contentOne {
-    SKSpriteNode *block = [SKSpriteNode spriteNodeWithImageNamed:@"block4.png"];
+    SKTexture *blockTex = [SKTexture textureWithImageNamed:@"block1.png"];
+    SKSpriteNode *block = [SKSpriteNode spriteNodeWithTexture:blockTex];
     block.name = @"block";
+    block.zPosition = 6;
     if (self.physicsWorld.gravity.dy < 0) {
-        CGFloat startY = floor.frame.size.height + player.frame.size.height;
-        CGFloat endY = winSize.height - roof.frame.size.height - player.frame.size.height*1.5f;
+        CGFloat startY = (floor.position.y + floor.frame.size.height*0.5f) + player.frame.size.height - block.frame.size.height*0.5f;
+        CGFloat endY = roof.position.y - roof.frame.size.height*0.5f - player.frame.size.height*2.0f - block.frame.size.height*0.5f;
         CGFloat posY = [self randFloatBetween:startY and:endY];
         block.position = CGPointMake(winSize.width*1.6f, posY);
-        block.anchorPoint = CGPointMake(0.5f, 1.0f);
-        block.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size center:CGPointMake(0, -block.frame.size.height*0.5f)];
+        //block.anchorPoint = CGPointMake(0.5f, 1.0f);
+        block.physicsBody = [SKPhysicsBody bodyWithTexture:blockTex size:block.frame.size];
     } else {
-        CGFloat startY = floor.frame.size.height + player.frame.size.height*1.5f;
-        CGFloat endY = winSize.height - roof.frame.size.height;
-        CGFloat posY = [self randFloatBetween:startY and:endY];
+        CGFloat startY = roof.position.y - roof.frame.size.height*0.5f - player.frame.size.height + block.frame.size.height*0.5f;
+        CGFloat endY = floor.position.y + floor.frame.size.height*0.5f + player.frame.size.height*2.0f + block.frame.size.height*0.5f;
+        CGFloat posY = [self randFloatBetween:endY and:startY];
         block.position = CGPointMake(winSize.width*1.6f, posY);
-        block.anchorPoint = CGPointMake(0.5f, 0);
-        block.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size center:CGPointMake(0, block.frame.size.height*0.5f)];
+        //block.anchorPoint = CGPointMake(0.5f, 0);
+        block.physicsBody = [SKPhysicsBody bodyWithTexture:blockTex size:block.frame.size];
     }
     
     
@@ -262,16 +271,16 @@
 
 -(void)contentTwo {
     // BOTTOM BLOCK
-    CGFloat bottomBlockTop = 0.0f;
-    SKSpriteNode *block = [SKSpriteNode spriteNodeWithImageNamed:@"block4.png"];
+    SKTexture *blockTex = [SKTexture textureWithImageNamed:@"block1.png"];
+    SKSpriteNode *block = [SKSpriteNode spriteNodeWithTexture:blockTex];
     block.name = @"block";
-    CGFloat startY = floor.frame.size.height + player.frame.size.height;
-    CGFloat endY = winSize.height - roof.frame.size.height - player.frame.size.height*2.5f;
-    CGFloat posY = [self randFloatBetween:startY and:endY];
+    block.zPosition = 6;
+    CGFloat startY = floor.position.y + (floor.frame.size.height*0.5f) + (player.frame.size.height*1.0f);
+    CGFloat endY = ((roof.position.y - floor.position.y) * 0.6f) + floor.position.y;
+    CGFloat posY = [self randFloatBetween:startY and:endY] - block.frame.size.height*0.5f;
     block.position = CGPointMake(winSize.width*1.6f, posY);
-    bottomBlockTop = posY;
-    block.anchorPoint = CGPointMake(0.5f, 1.0f);
-    block.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size center:CGPointMake(0, -block.frame.size.height*0.5f)];
+    
+    block.physicsBody = [SKPhysicsBody bodyWithTexture:blockTex size:block.frame.size];
     block.physicsBody.dynamic=NO;
     block.physicsBody.affectedByGravity=NO;
     block.physicsBody.mass=4;
@@ -283,14 +292,14 @@
     [self addChild:block];
     
     // TOP BLOCK
-    SKSpriteNode *block1 = [SKSpriteNode spriteNodeWithImageNamed:@"block4.png"];
+    SKSpriteNode *block1 = [SKSpriteNode spriteNodeWithTexture:blockTex];
     block1.name = @"block";
-    CGFloat startY1 = bottomBlockTop + player.frame.size.height*2.0f;
-    CGFloat endY1 = winSize.height - roof.frame.size.height - player.frame.size.height;
-    CGFloat posY1 = [self randFloatBetween:startY1 and:endY1];
+    block1.zPosition = 6;
+    
+    CGFloat posY1 = block.position.y + block.frame.size.height + player.frame.size.height*2.0f;
     block1.position = CGPointMake(winSize.width*1.6f, posY1);
-    block1.anchorPoint = CGPointMake(0.5f, 0);
-    block1.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size center:CGPointMake(0, block.frame.size.height*0.5f)];
+    //block1.anchorPoint = CGPointMake(0.5f, 0);
+    block1.physicsBody = [SKPhysicsBody bodyWithTexture:blockTex size:block.frame.size];
     block1.physicsBody.dynamic=NO;
     block1.physicsBody.affectedByGravity=NO;
     block1.physicsBody.mass=4;
@@ -301,31 +310,31 @@
     block1.physicsBody.contactTestBitMask = floorCategory | playerCategory;
     [self addChild:block1];
 }
-
--(void)contentThree {
-    NSLog(@"ELEVEN");
-    SKSpriteNode *reverse = [SKSpriteNode spriteNodeWithImageNamed:@"reverse.png"];
-    reverse.name = @"reverse";
-    if (self.physicsWorld.gravity.dy < 0) {
-        reverse.position = CGPointMake(winSize.width*1.6f, floor.frame.size.height + reverse.frame.size.height*0.5f);
-    } else {
-        reverse.position = CGPointMake(winSize.width*1.6f, winSize.height - roof.frame.size.height - reverse.frame.size.height*0.5f);
-    }
-    reverse.physicsBody = [SKPhysicsBody bodyWithTexture:[SKTexture textureWithImageNamed:@"reverse.png"] size:reverse.size];
-    reverse.physicsBody.dynamic=NO;
-    reverse.physicsBody.affectedByGravity=NO;
-    reverse.physicsBody.mass=4;
-    reverse.physicsBody.restitution = 0.5f;
-    reverse.physicsBody.linearDamping=0.0f;
-    reverse.physicsBody.categoryBitMask = reverseCategory;
-    reverse.physicsBody.collisionBitMask = playerCategory | floorCategory;
-    reverse.physicsBody.contactTestBitMask = floorCategory | playerCategory;
-    [self addChild:reverse];
-}
+//
+//-(void)contentThree {
+//    NSLog(@"ELEVEN");
+//    SKSpriteNode *reverse = [SKSpriteNode spriteNodeWithImageNamed:@"reverse.png"];
+//    reverse.name = @"reverse";
+//    if (self.physicsWorld.gravity.dy < 0) {
+//        reverse.position = CGPointMake(winSize.width*1.6f, floor.frame.size.height + reverse.frame.size.height*0.5f);
+//    } else {
+//        reverse.position = CGPointMake(winSize.width*1.6f, winSize.height - roof.frame.size.height - reverse.frame.size.height*0.5f);
+//    }
+//    reverse.physicsBody = [SKPhysicsBody bodyWithTexture:[SKTexture textureWithImageNamed:@"reverse.png"] size:reverse.size];
+//    reverse.physicsBody.dynamic=NO;
+//    reverse.physicsBody.affectedByGravity=NO;
+//    reverse.physicsBody.mass=4;
+//    reverse.physicsBody.restitution = 0.5f;
+//    reverse.physicsBody.linearDamping=0.0f;
+//    reverse.physicsBody.categoryBitMask = reverseCategory;
+//    reverse.physicsBody.collisionBitMask = playerCategory | floorCategory;
+//    reverse.physicsBody.contactTestBitMask = floorCategory | playerCategory;
+//    [self addChild:reverse];
+//}
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.physicsWorld.gravity.dy<0) {
-        if (player.position.y - floor.frame.size.height < player.frame.size.height*0.55f) {
+        if (player.position.y - (floor.frame.size.height*0.5f) - (floor.position.y) < player.frame.size.height*0.55f) {
             player.physicsBody.dynamic = NO;
             touching = YES;
             start = [NSDate date];
@@ -458,7 +467,7 @@
         [[NSUserDefaults standardUserDefaults] setInteger:score forKey:@"CurrentScore"];
         isDead = YES;
         SKTransition *reveal = [SKTransition fadeWithDuration:1];
-        SKScene * scene = [GameEnd sceneWithSize:winSize andScore:0];
+        SKScene * scene = [GameEnd sceneWithSize:winSize andScore:1];
         scene.scaleMode = SKSceneScaleModeAspectFill;
         SKView *skView = (SKView *) self.view;
         [skView presentScene:scene transition:reveal];
@@ -472,7 +481,7 @@
         [[NSUserDefaults standardUserDefaults] setInteger:score forKey:@"CurrentScore"];
         isDead = YES;
         SKTransition *reveal = [SKTransition fadeWithDuration:1];
-        SKScene * scene = [GameEnd sceneWithSize:winSize andScore:0];
+        SKScene * scene = [GameEnd sceneWithSize:winSize andScore:1];
         scene.scaleMode = SKSceneScaleModeAspectFill;
         SKView *skView = (SKView *) self.view;
         [skView presentScene:scene transition:reveal];
@@ -517,7 +526,7 @@
     CGFloat angle = (timeInterval*M_PI)/180.0f;
     CGFloat multiplier = 0.0f;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        multiplier = 430.0f;
+        multiplier = 320.0f;
         flowSpeed = 5.0f;
     } else {
         multiplier = 430.0f*2.8f;
@@ -534,43 +543,53 @@
 }
 
 -(void)nextContent {
-    
-    
-    if (reverseCounter<3) {
-        int rnd = 0;
-        rnd = arc4random()%2;
-        switch (rnd) {
-            case 0:
-                [self contentOne];
-                break;
-            case 1:
-                [self contentTwo];
-                break;
+    int rnd = 0;
+    rnd = arc4random()%2;
+    switch (rnd) {
+        case 0:
+            [self contentOne];
+            break;
+        case 1:
+            [self contentTwo];
+            break;
             
-        }
-    } else {
-        int rnd = 0;
-        rnd = arc4random()%4;
-        switch (rnd) {
-            case 0:
-                [self contentOne];
-                break;
-            case 1:
-                [self contentTwo];
-                break;
-            case 2:
-                [self contentThree];
-                reverseCounter = 0;
-                break;
-            case 3:
-                [self contentThree];
-                reverseCounter = 0;
-                break;
-                
-        }
     }
     
-    reverseCounter++;
+//    if (reverseCounter<3) {
+//        int rnd = 0;
+//        rnd = arc4random()%2;
+//        switch (rnd) {
+//            case 0:
+//                [self contentOne];
+//                break;
+//            case 1:
+//                [self contentTwo];
+//                break;
+//            
+//        }
+//    } else {
+//        int rnd = 0;
+//        rnd = arc4random()%4;
+//        switch (rnd) {
+//            case 0:
+//                [self contentOne];
+//                break;
+//            case 1:
+//                [self contentTwo];
+//                break;
+//            case 2:
+//                [self contentThree];
+//                reverseCounter = 0;
+//                break;
+//            case 3:
+//                [self contentThree];
+//                reverseCounter = 0;
+//                break;
+//                
+//        }
+//    }
+//    
+//    reverseCounter++;
     
 
     
@@ -632,6 +651,33 @@
             midground.position = midpos1;
         }
         
+        {
+            CGPoint forepos = foreground.position;
+            CGPoint forepos2 = foreground2.position;
+            if (foreground.position.x < foreground2.position.x) {
+                forepos.x-=(flowSpeed);
+            } else {
+                forepos2.x-=(flowSpeed);
+            }
+            if (forepos.x < -0.5f*winSize.width) {
+                forepos.x += 2.0f*winSize.width;
+            }
+            foreground.position = forepos;
+            if (forepos2.x < -0.5f*winSize.width) {
+                forepos2.x += 2.0f*winSize.width;
+            }
+            foreground2.position = forepos2;
+            if (foreground.position.x < foreground2.position.x) {
+                CGPoint forepos2 = foreground2.position;
+                forepos2.x = foreground.position.x + foreground.frame.size.width;
+                foreground2.position = forepos2;
+            } else {
+                CGPoint forepos1 = foreground.position;
+                forepos1.x = foreground2.position.x + foreground2.frame.size.width;
+                foreground.position = forepos1;
+            }
+        }
+        
         
         
         CGPoint floorpos = floor.position;
@@ -659,6 +705,34 @@
             floor.position = floorpos1;
         }
         
+        {
+            CGPoint roofpos = roof.position;
+            CGPoint roofpos2 = roof2.position;
+            if (roof.position.x < roof2.position.x) {
+                roofpos.x-=(flowSpeed);
+            } else {
+                roofpos2.x-=(flowSpeed);
+            }
+            if (roofpos.x < -0.5f*winSize.width) {
+                roofpos.x += 2.0f*winSize.width;
+            }
+            roof.position = roofpos;
+            if (roofpos2.x < -0.5f*winSize.width) {
+                roofpos2.x += 2.0f*winSize.width;
+            }
+            roof2.position = roofpos2;
+            if (roof.position.x < roof2.position.x) {
+                CGPoint roofpos2 = roof2.position;
+                roofpos2.x = roof.position.x + roof.frame.size.width;
+                roof2.position = roofpos2;
+            } else {
+                CGPoint roofpos1 = roof.position;
+                roofpos1.x = roof2.position.x + roof2.frame.size.width;
+                roof.position = roofpos1;
+            }
+
+        }
+        
         
         
         
@@ -669,7 +743,7 @@
             if (timeInterval>0.8f) {
                 timeInterval=0.8f;
             }
-            timeInterval/0.8f;
+            timeInterval/=0.8f;
             timeInterval*=90;
             CGFloat angle = (timeInterval*M_PI)/180.0f;
             CGFloat multiplier = 0.0f;
@@ -686,46 +760,7 @@
                 verticalImpulse*=-1;
             }
             
-            CGFloat vertVelocityInitial = (verticalImpulse/player.physicsBody.mass)/12.0f;
-            CGFloat timeOfFlight = ((2*vertVelocityInitial)/(fabs(self.physicsWorld.gravity.dy)));
-            CGFloat timeSegment = timeOfFlight/20.0f;
-            CGFloat startY = originalY + player.size.height*0.5f;
-            CGFloat startX = player.position.x;
             
-            //
-            //        if (trajectory==nil) {
-            //            trajectory = [SKShapeNode node];
-            //            CGMutablePathRef path = CGPathCreateMutable();
-            //
-            //            CGPathMoveToPoint(path, NULL, startX, startY);
-            //
-            //            for (int i=0;i<20;i++) {
-            //                CGFloat newX = startX + (timeSegment*i*flowSpeed*1.6f);
-            //                CGFloat newY = startY + (vertVelocityInitial*i*timeSegment) + (0.5f*self.physicsWorld.gravity.dy*timeSegment*i*timeSegment*i);
-            //                CGPathAddLineToPoint(path, NULL, newX, newY);
-            //            }
-            //
-            //            trajectory.path = path;
-            //            trajectory.strokeColor = [SKColor magentaColor];
-            //            trajectory.glowWidth = 2.0f;
-            //            [self addChild:trajectory];
-            //        } else {
-            //            [self removeChildrenInArray:@[trajectory]];
-            //            trajectory = nil;
-            //            trajectory = [SKShapeNode node];
-            //            CGMutablePathRef path = CGPathCreateMutable();
-            //            CGPathMoveToPoint(path, NULL, startX, startY);
-            //            for (int i=0;i<20;i++) {
-            //                CGFloat newX = startX + (timeSegment*i*flowSpeed*1.6f);
-            //                CGFloat newY = startY + (vertVelocityInitial*i*timeSegment) + (0.5f*self.physicsWorld.gravity.dy*timeSegment*timeSegment*i*i);
-            //
-            //                CGPathAddLineToPoint(path, NULL, newX, newY);
-            //            }
-            //            trajectory.path = path;
-            //            trajectory.strokeColor = [SKColor magentaColor];
-            //            trajectory.glowWidth = 2.0f;
-            //            [self addChild:trajectory];
-            //        }
             
         }
         NSMutableArray *removeList = [NSMutableArray array];
@@ -736,11 +771,8 @@
                 node.position = temp;
                 if (temp.x < node.frame.size.width*-2.0f && temp.y < winSize.height*0.5f) {
                     [removeList addObject:node];
-                    //[self contentEleven];
-                    //[self nextContent];
                 } else if ((![doneBlocks containsObject:node]) && ((temp.x+node.frame.size.width*0.6f) < (player.position.x - player.frame.size.width*0.6f))) {
                     score++;
-                    
                     [doneBlocks addObject:node];
                     scoreLabel.text = [NSString stringWithFormat:@"%li",(long)score];
                 }
@@ -751,10 +783,8 @@
                 node.position = temp;
                 if (temp.x < node.frame.size.width*-2.0f && temp.y < winSize.height*0.5f) {
                     [removeList addObject:node];
-                    //[self contentEleven];
-                    //[self nextContent];
                 }
-#warning REMOVE WHEN DONE
+
             }
         }
         if (removeList.count>0) {
@@ -766,11 +796,11 @@
                 [removeList removeLastObject];
             }
         }
-        //NSLog(@"flowSpeed: %f",flowSpeed);
+        
         contentCounter++;
         if (contentCounter==CONTENT_COUNT_LIMIT) {
-            [self nextContent];
-            
+            //[self nextContent];
+            [self contentTwo];
             contentCounter = 0;
         }
         if (self.physicsWorld.gravity.dy < 0) {

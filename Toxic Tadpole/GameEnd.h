@@ -7,8 +7,14 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GameKitHelper.h"
+
+
 
 @interface GameEnd : SKScene
+
+@property (nonatomic, assign) int type;
+@property (nonatomic, strong) SKLabelNode *highScoreLabel;
 
 -(id)initWithSize:(CGSize)size andScore:(int)theScore;
 +(id)sceneWithSize:(CGSize)size andScore:(int)theScore;

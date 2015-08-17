@@ -41,10 +41,10 @@
 
     // Configure the view.
     SKView * skView = (SKView *)self.view;
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
-    skView.showsPhysics = YES;
-    
+   // skView.showsFPS = YES;
+    //skView.showsNodeCount = YES;
+    //skView.showsPhysics = YES;
+    //skView.showsDrawCount = YES;
     /* Sprite Kit applies additional optimizations to improve rendering performance */
     skView.ignoresSiblingOrder = YES;
     
@@ -64,7 +64,7 @@
     } else {
         usableHeight = 66.0f;
     }
-    bannerView = [[ADBannerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, usableHeight)];
+    bannerView = [[ADBannerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - usableHeight, self.view.frame.size.width,usableHeight)];
     [self.view addSubview:bannerView];
 }
 

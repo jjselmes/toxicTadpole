@@ -57,7 +57,7 @@ NSString *const PresentAuthenticationViewController = @"present_authenication_vi
     }
     
     
-    GKScore *gkScore = [[GKScore alloc]initWithLeaderboardIdentifier:@"cells_leaderboard"];
+    GKScore *gkScore = [[GKScore alloc]initWithLeaderboardIdentifier:@"toxicLeaderboard1"];
     
     gkScore.value = score;
     

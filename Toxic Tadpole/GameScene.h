@@ -9,6 +9,7 @@
 #import <SpriteKit/SpriteKit.h>
 
 #define CONTENT_COUNT_LIMIT 140
+#define CONTENT_COUNT_LIMIT_IPAD 186
 
 static const uint32_t floorCategory = 0x1<<1;             // ship
 static const uint32_t playerCategory = 0x1<<2;      // charge changer walls
@@ -57,6 +58,31 @@ static const uint32_t reverseCategory = 0x1<<5;
 @property (nonatomic, strong) SKSpriteNode *foreground2;
 
 @property (nonatomic, strong) NSMutableArray *liveContent;
+
+@property (nonatomic, strong) NSMutableArray *travellingFrames;
+@property (nonatomic, strong) NSMutableArray *landingFrames;
+@property (nonatomic, strong) NSMutableArray *jumpingFrames;
+@property (nonatomic, strong) NSMutableArray *squishingFrames;
+@property (nonatomic, assign) CGFloat currentVelocityY;
+@property (nonatomic, assign) CGFloat previousVelocityY;
+
+@property (nonatomic, assign) int STATE;
+@property (nonatomic, assign) int previousState;
+
+@property (nonatomic, assign) BOOL setBodyToNormal;
+
+@property (nonatomic, strong) NSMutableDictionary *thePhysicsBodies;
+
+typedef NS_ENUM(int, TADPOLE_STATE) {
+    TRAVEL,
+    SQUISH,
+    JUMP,
+    FLY_UP,
+    TOP,
+    FLY_DOWN,
+    LAND
+};
+
 
 -(id)initWithSize:(CGSize)size;
 +(id)sceneWithSize:(CGSize)size;

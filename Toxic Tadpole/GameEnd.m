@@ -42,6 +42,7 @@
     SKSpriteNode *barrel = [SKSpriteNode spriteNodeWithImageNamed:@"barrel"];
     barrel.position = CGPointMake(size.size.width*0.1f, size.size.height*0.25f);
     barrel.zRotation = 0.5f;
+    barrel.zPosition = -1;
     [self addChild:barrel];
     
     SKSpriteNode *leaves = [SKSpriteNode spriteNodeWithImageNamed:@"foreGround1"];
@@ -58,7 +59,7 @@
     [self addChild:play];
     
     SKSpriteNode *gc = [SKSpriteNode spriteNodeWithImageNamed:@"gameCenter"];
-    gc.position = CGPointMake(size.size.width*0.925f, size.size.height*0.1f);
+    gc.position = CGPointMake(size.size.width*0.925f, size.size.height*0.2f);
     gc.name = @"LEADERBOARD";
     [self addChild:gc];
     
@@ -69,13 +70,18 @@
     
     NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"HighScore"];
     NSInteger latestScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"CurrentScore"];
-    
-    
+    NSInteger oldHighScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"OldHighScore"];
+    //NSLog(@"old: %i latest: %i high: %i",oldHighScore,latestScore,highScore);
     if (type == 1) {
-        if (latestScore == highScore) {
+        if (latestScore > oldHighScore) {
             highScoreLabel = [SKLabelNode labelNodeWithFontNamed:@"WOBBLES"];
             highScoreLabel.text = @"New High Score!!";
-            highScoreLabel.fontSize = 20;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                highScoreLabel.fontSize = 20;
+            } else {
+                highScoreLabel.fontSize = 40;
+            }
+            
             highScoreLabel.fontColor = [SKColor colorWithRed:1 green:0 blue:1 alpha:1];
             highScoreLabel.position=CGPointMake(size.size.width*0.5f, size.size.height*0.31f);
             highScoreLabel.zPosition = 10;
@@ -93,15 +99,24 @@
     
     SKLabelNode *latestLabel = [SKLabelNode labelNodeWithFontNamed:@"WOBBLES"];
     latestLabel.text = @"Latest Score";
-    latestLabel.fontSize = 16;
-    latestLabel.fontColor = [SKColor colorWithRed:1 green:0 blue:1 alpha:1];;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        latestLabel.fontSize = 16;
+    } else {
+        latestLabel.fontSize = 32;
+    }
+    
+    latestLabel.fontColor = [SKColor colorWithRed:1 green:140.0f/255 blue:0 alpha:1];;
     latestLabel.position=CGPointMake(size.size.width*0.4f, size.size.height*0.2f);
     latestLabel.zPosition = 10;
     [self addChild:latestLabel];
     
     SKLabelNode *labelTwo = [SKLabelNode labelNodeWithFontNamed:@"WOBBLES"];
     labelTwo.text = [NSString stringWithFormat:@"%li",(long)latestScore];
-    labelTwo.fontSize = 16;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        labelTwo.fontSize = 16;
+    } else {
+        labelTwo.fontSize = 32;
+    }
     labelTwo.fontColor = [SKColor colorWithRed:1 green:0 blue:1 alpha:1];;
     labelTwo.position=CGPointMake(latestLabel.position.x + 0.7f*latestLabel.frame.size.width, size.size.height*0.2f);
     labelTwo.zPosition = 10;
@@ -117,7 +132,11 @@
     
     SKLabelNode *highLabel = [SKLabelNode labelNodeWithFontNamed:@"WOBBLES"];
     highLabel.text = @"High Score";
-    highLabel.fontSize = 16;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        highLabel.fontSize = 16;
+    } else {
+        highLabel.fontSize = 32;
+    }
     highLabel.fontColor = [SKColor colorWithRed:1 green:0 blue:1 alpha:1];
     highLabel.position=CGPointMake(size.size.width*0.4f - (latestLabel.frame.size.width*0.5f - highLabel.frame.size.width*0.5f), size.size.height*0.1f);
     highLabel.zPosition = 10;
@@ -125,7 +144,11 @@
     
     SKLabelNode *labelT = [SKLabelNode labelNodeWithFontNamed:@"WOBBLES"];
     labelT.text = [NSString stringWithFormat:@"%li",(long)highScore];
-    labelT.fontSize = 16;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        labelT.fontSize = 16;
+    } else {
+        labelT.fontSize = 32;
+    }
     labelT.fontColor = [SKColor colorWithRed:1 green:0 blue:1 alpha:1];
     labelT.position = CGPointMake(labelTwo.position.x, size.size.height*0.1f);
     labelT.zPosition  = 10;

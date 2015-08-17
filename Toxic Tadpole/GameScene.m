@@ -102,7 +102,7 @@
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             self.physicsWorld.gravity = CGVectorMake(0,-9.8);
         } else {
-            self.physicsWorld.gravity = CGVectorMake(0,-9.8);
+            self.physicsWorld.gravity = CGVectorMake(0,-15.0);
         }
         
         floorHit = NO;
@@ -739,7 +739,6 @@
         currentVelocityY = player.physicsBody.velocity.dy;
         //NSLog(@"prev: %f and curr: %f",previousVelocityY, currentVelocityY);
         if (previousVelocityY > 0 && currentVelocityY < 0 && STATE == FLY_UP) {
-            NSLog(@"Starting down");
             SKAction *rotateDown = [SKAction rotateToAngle:-0.5f duration:0.25f];
             [player runAction:rotateDown];
             STATE = FLY_DOWN;

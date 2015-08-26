@@ -503,7 +503,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         multiplier = 640.0f;
     } else {
-        multiplier = 640.0f * 1.6f;
+        multiplier = 640.0f * 2.0f;
     }
     
     flowSpeed = 5.0f;
